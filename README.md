@@ -1,6 +1,6 @@
-# complethe README
+# Complethe
 
-This is the README for your extension "complethe". After writing up a brief description, we recommend including the following sections.
+Inline Code Completions with local language models.
 
 ## Features
 
@@ -18,14 +18,13 @@ If you have any requirements or dependencies, add a section describing those and
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Debounce Time: How often is autocomplete requests made.
 
 For example:
 
 This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+* `complethe.debounceTime`: Set to `300ms` by default.
 
 ## Known Issues
 
