@@ -8,7 +8,7 @@ Autocomplete: It provides inline code suggestions as you type.
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+Local language model provided by Ollama. Currently only tested with qwen2.5-coder.
 
 ## Extension Settings
 
