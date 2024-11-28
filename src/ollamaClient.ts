@@ -17,18 +17,15 @@ export class OllamaClient {
             stream: false,
             raw: true,
             options: {
-                num_predict: 42
+                temperature: 0.5
             }
         };
-
-        console.log("Requesting...");
 
         try {
             const response = await axios.post(
                 `${this.serverUrl}/api/generate`,
                 params,
             );
-            console.log(response.data.response);
             return response.data;
         } catch (error) {
             if (axios.isCancel(error)) {

@@ -19,4 +19,4 @@ After the download is complete, you should start seeing completions in VS Code.
 
 ## Extension Settings
 
-Debounce Time: The delay before making a request after typing stops.
+Debounce Time: The delay (in milliseconds) before making a request after typing stops.

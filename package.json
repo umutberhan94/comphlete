@@ -1,7 +1,7 @@
 {
   "name": "complethe",
   "displayName": "complethe",
-  "description": "Inline Code Completions with local language models.",
+  "description": "Inline Code Completions with AI.",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.95.0"
@@ -21,7 +21,7 @@
           "type": "number",
           "default": 300,
           "minimum": 0,
-          "description": "Debounce time (in milliseconds) for code completion requests."
+          "description": "The delay (in milliseconds) before triggering completion after typing stops."
         }
       }
     }
