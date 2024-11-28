@@ -1,4 +1,4 @@
-import axios, { CancelToken } from "axios";
+import axios, { CancelToken, options } from "axios";
 
 export class OllamaClient {
     private serverUrl: string;
@@ -17,7 +17,7 @@ export class OllamaClient {
             stream: false,
             raw: true,
             options: {
-                temperature: 0.2,
+                num_predict: 42
             }
         };
 
@@ -28,6 +28,7 @@ export class OllamaClient {
                 `${this.serverUrl}/api/generate`,
                 params,
             );
+            console.log(response.data.response);
             return response.data;
         } catch (error) {
             if (axios.isCancel(error)) {

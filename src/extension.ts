@@ -17,13 +17,13 @@ export function activate(context: vscode.ExtensionContext) {
 	const debouncedGetCompletion = debounce(ollamaClient.getCompletion.bind(ollamaClient), 300);
 
 	const provider: vscode.InlineCompletionItemProvider = {
-		async provideInlineCompletionItems(document, position, context, token) {
+		async provideInlineCompletionItems(document, position) {
 			const documentText = document.getText();
 
 			const prefixCode = documentText.substring(0, document.offsetAt(position));
 			const suffixCode = documentText.substring(document.offsetAt(position));
 
-			const prompt = `<|fim_prefix|>${prefixCode}<|fim_suffix|>${suffixCode}<|fim_middle|>`;
+			const prompt = "<|fim_prefix|>" + prefixCode + "<|fim_suffix|>" + suffixCode + "<|fim_middle|>";
 
 			const model = "qwen2.5-coder:1.5b";
 
@@ -36,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
 					return { items: [] };
 				}
 
-				let completionText = apiResponse.response.trim();
+				let completionText = apiResponse.response;
 
 				// Define the range for the completion at the cursor position
 				const range = new vscode.Range(position, position);
