@@ -21,14 +21,13 @@ export class OllamaClient {
             }
         };
 
-        console.log("Request parameters:", params);
+        console.log("Requesting...");
 
         try {
             const response = await axios.post(
                 `${this.serverUrl}/api/generate`,
                 params,
             );
-            console.log("API Response:", response.data);
             return response.data;
         } catch (error) {
             if (axios.isCancel(error)) {

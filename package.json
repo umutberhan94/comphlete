@@ -17,9 +17,10 @@
     "configuration": {
       "type": "object",
       "properties": {
-        "inlineCompletion.debounceTime": {
+        "complethe.debounceTime": {
           "type": "number",
           "default": 300,
+          "minimum": 0,
           "description": "Debounce time (in milliseconds) for code completion requests."
         }
       }

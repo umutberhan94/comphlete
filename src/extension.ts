@@ -1,9 +1,20 @@
 import * as vscode from "vscode";
 import { OllamaClient } from "./ollamaClient";
 
+function debounce<T extends (...args: any[]) => any>(func: T, delay: number) {
+	let timer: NodeJS.Timeout;
+	return (...args: Parameters<T>): Promise<ReturnType<T>> =>
+		new Promise((resolve) => {
+			clearTimeout(timer);
+			timer = setTimeout(() => resolve(func(...args)), delay);
+		});
+}
+
 export function activate(context: vscode.ExtensionContext) {
 	const serverUrl = "http://localhost:11434";
 	const ollamaClient = new OllamaClient(serverUrl);
+
+	const debouncedGetCompletion = debounce(ollamaClient.getCompletion.bind(ollamaClient), 300);
 
 	const provider: vscode.InlineCompletionItemProvider = {
 		async provideInlineCompletionItems(document, position, context, token) {
@@ -18,7 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			try {
 				// Send the prompt to the AI
-				const apiResponse = await ollamaClient.getCompletion(model, prompt);
+				const apiResponse = await debouncedGetCompletion(model, prompt);
 
 				// Ensure a valid response
 				if (!apiResponse?.response?.trim()) {
