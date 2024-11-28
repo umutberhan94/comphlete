@@ -7,7 +7,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const provider: vscode.InlineCompletionItemProvider = {
 		async provideInlineCompletionItems(document, position, context, token) {
-			console.log(position);
 			const documentText = document.getText();
 
 			const prefixCode = documentText.substring(0, document.offsetAt(position));
@@ -41,19 +40,6 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		},
 	};
-
-	// // Supported languages
-	// const supportedLanguages = [
-	// 	"javascript", "typescript", "python", "java", "csharp", "ruby", "php", "go", "rust", "swift",
-	// 	"kotlin", "c", "cpp", "sql", "html", "css", "bash", "dart", "r", "julia"
-	// ];
-
-	// // Register the inline completion provider for each language
-	// supportedLanguages.forEach((language) => {
-	// 	context.subscriptions.push(
-	// 		vscode.languages.registerInlineCompletionItemProvider({ language }, provider)
-	// 	);
-	// });
 
 	vscode.languages.registerInlineCompletionItemProvider({ pattern: '**' }, provider);
 }
