@@ -14,6 +14,8 @@ Inline Code Completions with AI. This extension leverages AI models that are exe
 
    ```bash
    ollama run qwen2.5-coder:1.5b
+   ```
+After the download is complete, you should start seeing completions in VS Code.
 
 ## Extension Settings
 
