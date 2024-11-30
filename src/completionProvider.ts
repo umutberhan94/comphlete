@@ -44,12 +44,13 @@ export function createCompletionProvider(serverUrl: string) {
 
                 return { items: [new vscode.InlineCompletionItem(completionText, range)] };
             } catch (error) {
-                console.error("Error fetching completion:", error);
-                vscode.window.showErrorMessage(
-                    "Error communicating with Ollama. Ensure it is running on http://localhost:11434"
-                );
+                if (error) {
+                    console.error("Error fetching completion:", error);
+                    vscode.window.showErrorMessage("Error communicating with Ollama");
+                }
                 return { items: [] };
             }
+
         },
     };
 

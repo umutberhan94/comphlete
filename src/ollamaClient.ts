@@ -32,7 +32,6 @@ export class OllamaClient {
         this.cancelTokenSource = axios.CancelToken.source();
 
         try {
-            console.log(`Temperature used in request: ${params.options.temperature}`);
             const response = await axios.post(
                 `${this.serverUrl}/api/generate`,
                 params,
@@ -41,11 +40,13 @@ export class OllamaClient {
             return response.data;
         } catch (error) {
             if (axios.isCancel(error)) {
-                console.log("Request was canceled:", error.message);
+                return null;
             } else {
                 console.error("Error occurred:", error);
+                throw error;
             }
-            throw error;
         }
+
+
     }
 }

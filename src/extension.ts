@@ -70,7 +70,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			supportedLanguages.forEach((language) => {
 				providerDisposable = vscode.languages.registerInlineCompletionItemProvider(
-					{ language }, // Register for each specific language
+					{ language },
 					provider
 				);
 			});
