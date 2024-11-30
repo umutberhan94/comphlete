@@ -1,4 +1,4 @@
-# Complethe
+# Comphlete
 
 Inline Code Completions with AI. This extension leverages AI models that are executed locally, providing fast and privacy-conscious code completions.
 

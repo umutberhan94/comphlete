@@ -41,7 +41,7 @@ export function createCompletionProvider(serverUrl: string) {
     };
 
     vscode.workspace.onDidChangeConfiguration((event) => {
-        if (event.affectsConfiguration("complethe.debounceDelay")) {
+        if (event.affectsConfiguration("comphlete.debounceDelay")) {
             const newDelay = getDebounceDelay();
             debouncedGetCompletion = debounce(
                 ollamaClient.getCompletion.bind(ollamaClient),

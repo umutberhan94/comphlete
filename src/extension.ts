@@ -9,24 +9,24 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Status bar item for toggling inline completion
 	const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-	statusBarItem.command = "complethe.toggleInlineCompletion";
+	statusBarItem.command = "comphlete.toggleInlineCompletion";
 	context.subscriptions.push(statusBarItem);
 
 	// Function to update status bar item text
 	function updateStatusBar() {
 		if (isInlineCompletionEnabled()) {
-			statusBarItem.text = "$(check) Complethe: Enabled";
+			statusBarItem.text = "$(check) Comphlete";
 			statusBarItem.tooltip = "Click to disable inline completion";
 		} else {
-			statusBarItem.text = "$(x) Complethe: Disabled";
+			statusBarItem.text = "$(x) Comphlete";
 			statusBarItem.tooltip = "Click to enable inline completion";
 		}
 		statusBarItem.show();
 	}
 
 	// Command to toggle the setting
-	const toggleCommand = vscode.commands.registerCommand("complethe.toggleInlineCompletion", async () => {
-		const config = vscode.workspace.getConfiguration("complethe");
+	const toggleCommand = vscode.commands.registerCommand("comphlete.toggleInlineCompletion", async () => {
+		const config = vscode.workspace.getConfiguration("comphlete");
 		const currentValue = isInlineCompletionEnabled();
 		await config.update("enableInlineCompletion", !currentValue, vscode.ConfigurationTarget.Global);
 		vscode.window.showInformationMessage(
@@ -55,7 +55,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Watch for configuration changes
 	vscode.workspace.onDidChangeConfiguration((event) => {
-		if (event.affectsConfiguration("complethe.enableInlineCompletion")) {
+		if (event.affectsConfiguration("comphlete.enableInlineCompletion")) {
 			updateStatusBar();
 			registerProvider();
 		}

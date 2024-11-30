@@ -1,8 +1,9 @@
 {
-  "name": "complethe",
-  "displayName": "complethe",
+  "name": "comphlete",
+  "displayName": "Comphlete",
   "description": "Inline Code Completions with AI.",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "publisher": "UmutBerhan",
   "engines": {
     "vscode": "^1.95.0"
   },
@@ -16,21 +17,21 @@
   "contributes": {
     "commands": [
       {
-        "command": "complethe.toggleInlineCompletion",
+        "command": "comphlete.toggleInlineCompletion",
         "title": "Toggle Inline Completion",
-        "category": "Complethe"
+        "category": "Comphlete"
       }
     ],
     "configuration": {
       "type": "object",
       "properties": {
-        "complethe.debounceDelay": {
+        "comphlete.debounceDelay": {
           "type": "number",
           "default": 300,
           "minimum": 0,
           "description": "The delay (in milliseconds) before triggering completion after typing stops."
         },
-        "complethe.enableInlineCompletion": {
+        "comphlete.enableInlineCompletion": {
           "type": "boolean",
           "default": true,
           "description": "Enable or disable inline completion functionality."
