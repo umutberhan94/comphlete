@@ -17,7 +17,7 @@
     "configuration": {
       "type": "object",
       "properties": {
-        "complethe.debounceTime": {
+        "complethe.debounceDelay": {
           "type": "number",
           "default": 300,
           "minimum": 0,

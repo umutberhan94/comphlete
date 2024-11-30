@@ -10,11 +10,19 @@ function debounce<T extends (...args: any[]) => any>(func: T, delay: number) {
 		});
 }
 
+function getDebounceDelay() {
+	const config = vscode.workspace.getConfiguration("complethe");
+	return config.get<number>("debounceDelay", 300);
+}
+
 export function activate(context: vscode.ExtensionContext) {
 	const serverUrl = "http://localhost:11434";
 	const ollamaClient = new OllamaClient(serverUrl);
 
-	const debouncedGetCompletion = debounce(ollamaClient.getCompletion.bind(ollamaClient), 300);
+	let debouncedGetCompletion = debounce(
+		ollamaClient.getCompletion.bind(ollamaClient),
+		getDebounceDelay()
+	);
 
 	const provider: vscode.InlineCompletionItemProvider = {
 		async provideInlineCompletionItems(document, position) {
@@ -53,6 +61,18 @@ export function activate(context: vscode.ExtensionContext) {
 	};
 
 	vscode.languages.registerInlineCompletionItemProvider({ pattern: '**' }, provider);
+
+	vscode.workspace.onDidChangeConfiguration((event) => {
+		if (event.affectsConfiguration("complethe.debounceDelay")) {
+			const newDelay = getDebounceDelay();
+			debouncedGetCompletion = debounce(
+				ollamaClient.getCompletion.bind(ollamaClient),
+				newDelay
+			);
+			console.log(`Debounce delay updated to: ${newDelay}`);
+		}
+	});
+
 }
 
 export function deactivate() { }
