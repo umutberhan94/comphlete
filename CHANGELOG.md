@@ -11,4 +11,5 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## 1.2.4 (2024-12-01)
 
 - Performance updates.
+- Registered Inline Completion for supported languages 
 
