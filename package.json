@@ -2,7 +2,7 @@
   "name": "comphlete",
   "displayName": "Comphlete",
   "description": "Inline Code Completions with AI.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "publisher": "UmutBerhan",
   "icon": "images/logo.png",
   "engines": {
