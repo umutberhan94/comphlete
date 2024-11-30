@@ -1,17 +1,15 @@
 {
 	"compilerOptions": {
-		"module": "Node16",
-		"target": "ES2022",
-		"outDir": "out",
+		"module": "Node16", // Node.js style modules
+		"target": "ES2022", // Modern JavaScript
+		"outDir": "out", // Specify output directory (but with noEmit: true, this is only used by esbuild)
 		"lib": [
 			"ES2022"
-		],
-		"sourceMap": true,
-		"rootDir": "src",
-		"strict": true   /* enable all strict type-checking options */
-		/* Additional Checks */
-		// "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
-		// "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */
-		// "noUnusedParameters": true,  /* Report errors on unused parameters. */
+		], // Specify which JavaScript features to use
+		"sourceMap": true, // Enable source maps for easier debugging
+		"rootDir": "src", // Specify where source files are located
+		"strict": true, // Enable strict type-checking
+		"esModuleInterop": true, // Enables compatibility for ES Modules in Node.js
+		"noEmit": true // Prevent TypeScript from emitting .js files, since esbuild handles bundling
 	}
 }
