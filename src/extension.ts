@@ -30,8 +30,8 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	// Debounced functions using the reusable debounce utility
-	const debouncedUpdateStatusBar = debounce(updateStatusBar, 1000);
-	const debouncedRegisterProvider = debounce(registerProvider, 1000);
+	const debouncedUpdateStatusBar = debounce(updateStatusBar, 100);
+	const debouncedRegisterProvider = debounce(registerProvider, 100);
 
 	// Command to toggle the setting
 	const toggleCommand = vscode.commands.registerCommand("comphlete.toggleInlineCompletion", async () => {
@@ -52,7 +52,28 @@ export function activate(context: vscode.ExtensionContext) {
 
 		if (shouldRegister && !providerDisposable) {
 			const provider = createCompletionProvider(serverUrl);
-			providerDisposable = vscode.languages.registerInlineCompletionItemProvider({ pattern: "**" }, provider);
+
+			const supportedLanguages = [
+				'ada', 'agda', 'alloy', 'antlr', 'applescript', 'assembly', 'augeas', 'awk',
+				'batchfile', 'bluespec', 'c', 'c#', 'c++', 'clojure', 'cmake', 'coffeescript',
+				'common-lisp', 'css', 'cuda', 'dart', 'dockerfile', 'elixir', 'elm', 'emacs-lisp',
+				'erlang', 'f#', 'fortran', 'glsl', 'go', 'groovy', 'haskell', 'html', 'idris', 'isabelle',
+				'java', 'java-server-pages', 'javascript', 'json', 'julia', 'jupyter-notebook', 'kotlin',
+				'lean', 'literate-agda', 'literate-coffeescript', 'literate-haskell', 'lua', 'makefile',
+				'maple', 'markdown', 'mathematica', 'matlab', 'objectc++', 'ocaml', 'pascal', 'perl', 'php',
+				'powershell', 'prolog', 'protocol-buffer', 'python', 'r', 'racket', 'restructuredtext',
+				'rmarkdown', 'ruby', 'rust', 'sas', 'scala', 'scheme', 'shell', 'smalltalk', 'solidity',
+				'sparql', 'sql', 'stan', 'standard-ml', 'stata', 'swift', 'systemverilog', 'tcl', 'tcsh',
+				'tex', 'thrift', 'typescript', 'verilog', 'vhdl', 'visual-basic', 'vue', 'xslt', 'yacc',
+				'yaml', 'zig'
+			];
+
+			supportedLanguages.forEach((language) => {
+				providerDisposable = vscode.languages.registerInlineCompletionItemProvider(
+					{ language }, // Register for each specific language
+					provider
+				);
+			});
 		} else if (!shouldRegister && providerDisposable) {
 			providerDisposable.dispose();
 			providerDisposable = undefined;
