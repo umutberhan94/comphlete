@@ -1,6 +1,6 @@
 ![readme](https://github.com/user-attachments/assets/68942a51-6584-4915-9579-86460d24e177)
 
-###This extension leverages AI models that are executed locally, providing fast and privacy-conscious code completions.
+### This extension leverages AI models that are executed locally, providing fast and privacy-conscious code completions.
 
 ## Requirements
 
