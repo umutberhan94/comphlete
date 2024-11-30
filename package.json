@@ -14,6 +14,13 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "commands": [
+      {
+        "command": "complethe.toggleInlineCompletion",
+        "title": "Toggle Inline Completion",
+        "category": "Complethe"
+      }
+    ],
     "configuration": {
       "type": "object",
       "properties": {
@@ -22,6 +29,11 @@
           "default": 300,
           "minimum": 0,
           "description": "The delay (in milliseconds) before triggering completion after typing stops."
+        },
+        "complethe.enableInlineCompletion": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable inline completion functionality."
         }
       }
     }
