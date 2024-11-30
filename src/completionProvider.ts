@@ -11,11 +11,24 @@ export function createCompletionProvider(serverUrl: string) {
         getDebounceDelay()
     );
 
+    // Cache the last cursor position to prevent unnecessary calls
+    let lastCursorPosition: vscode.Position | null = null;
+
     const provider: vscode.InlineCompletionItemProvider = {
         async provideInlineCompletionItems(document, position) {
-            const documentText = document.getText();
-            const prefixCode = documentText.substring(0, document.offsetAt(position));
-            const suffixCode = documentText.substring(document.offsetAt(position));
+            // Check if the cursor has actually moved
+            if (lastCursorPosition && lastCursorPosition.isEqual(position)) {
+                return { items: [] };
+            }
+            lastCursorPosition = position;
+
+            const prefixCode = document.getText(
+                new vscode.Range(new vscode.Position(0, 0), position)
+            );
+            const suffixCode = document.getText(
+                new vscode.Range(position, document.lineAt(document.lineCount - 1).range.end)
+            );
+
             const prompt = `<|fim_prefix|>${prefixCode}<|fim_suffix|>${suffixCode}<|fim_middle|>`;
             const model = "qwen2.5-coder:1.5b";
 

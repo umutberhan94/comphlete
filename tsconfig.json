@@ -10,6 +10,6 @@
 		"rootDir": "src", // Specify where source files are located
 		"strict": true, // Enable strict type-checking
 		"esModuleInterop": true, // Enables compatibility for ES Modules in Node.js
-		"noEmit": true // Prevent TypeScript from emitting .js files, since esbuild handles bundling
+		"noEmit": false // Prevent TypeScript from emitting .js files, since esbuild handles bundling
 	}
 }

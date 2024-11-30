@@ -1,7 +1,9 @@
-import axios, { CancelToken, options } from "axios";
+import axios, { CancelTokenSource } from "axios";
+import { getTemperature } from "./config";
 
 export class OllamaClient {
     private serverUrl: string;
+    private cancelTokenSource: CancelTokenSource | null = null;
 
     constructor(serverUrl: string) {
         this.serverUrl = serverUrl;
@@ -11,28 +13,38 @@ export class OllamaClient {
         model: string,
         prompt: string,
     ): Promise<any> {
+        const temperature = getTemperature();
+
         const params = {
             model,
             prompt,
             stream: false,
             raw: true,
             options: {
-                temperature: 0.5
-            }
+                temperature,
+            },
         };
 
+        if (this.cancelTokenSource) {
+            this.cancelTokenSource.cancel("New request triggered");
+        }
+
+        this.cancelTokenSource = axios.CancelToken.source();
+
         try {
+            console.log(`Temperature used in request: ${params.options.temperature}`);
             const response = await axios.post(
                 `${this.serverUrl}/api/generate`,
                 params,
+                { cancelToken: this.cancelTokenSource.token }
             );
             return response.data;
         } catch (error) {
             if (axios.isCancel(error)) {
-                console.log("Request was canceled");
-                throw error;
+                console.log("Request was canceled:", error.message);
+            } else {
+                console.error("Error occurred:", error);
             }
-            console.error("Error occurred:", error);
             throw error;
         }
     }

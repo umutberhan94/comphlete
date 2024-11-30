@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { debounce } from "./debounce";
 import { createCompletionProvider } from "./completionProvider";
 import { isInlineCompletionEnabled } from "./config";
 
@@ -14,15 +15,23 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Function to update status bar item text
 	function updateStatusBar() {
-		if (isInlineCompletionEnabled()) {
-			statusBarItem.text = "$(check) Comphlete";
-			statusBarItem.tooltip = "Click to disable inline completion";
-		} else {
-			statusBarItem.text = "$(x) Comphlete";
-			statusBarItem.tooltip = "Click to enable inline completion";
+		const currentStatusText = statusBarItem.text;
+		const newStatusText = isInlineCompletionEnabled()
+			? "$(check) Comphlete"
+			: "$(x) Comphlete";
+
+		if (currentStatusText !== newStatusText) {
+			statusBarItem.text = newStatusText;
+			statusBarItem.tooltip = isInlineCompletionEnabled()
+				? "Click to disable inline completion"
+				: "Click to enable inline completion";
+			statusBarItem.show();
 		}
-		statusBarItem.show();
 	}
+
+	// Debounced functions using the reusable debounce utility
+	const debouncedUpdateStatusBar = debounce(updateStatusBar, 1000);
+	const debouncedRegisterProvider = debounce(registerProvider, 1000);
 
 	// Command to toggle the setting
 	const toggleCommand = vscode.commands.registerCommand("comphlete.toggleInlineCompletion", async () => {
@@ -32,20 +41,21 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage(
 			`Inline Completion is now ${!currentValue ? "enabled" : "disabled"}.`
 		);
-		registerProvider(); // Re-register provider if needed
-		updateStatusBar(); // Update the status bar
+		debouncedUpdateStatusBar(); // Update the status bar
+		debouncedRegisterProvider(); // Re-register provider if needed
 	});
 	context.subscriptions.push(toggleCommand);
 
 	// Function to register/unregister the provider based on the setting
 	function registerProvider() {
-		if (providerDisposable) {
-			providerDisposable.dispose(); // Dispose of the old provider
-			providerDisposable = undefined;
-		}
-		if (isInlineCompletionEnabled()) {
+		const shouldRegister = isInlineCompletionEnabled();
+
+		if (shouldRegister && !providerDisposable) {
 			const provider = createCompletionProvider(serverUrl);
 			providerDisposable = vscode.languages.registerInlineCompletionItemProvider({ pattern: "**" }, provider);
+		} else if (!shouldRegister && providerDisposable) {
+			providerDisposable.dispose();
+			providerDisposable = undefined;
 		}
 	}
 
@@ -56,8 +66,8 @@ export function activate(context: vscode.ExtensionContext) {
 	// Watch for configuration changes
 	vscode.workspace.onDidChangeConfiguration((event) => {
 		if (event.affectsConfiguration("comphlete.enableInlineCompletion")) {
-			updateStatusBar();
-			registerProvider();
+			debouncedUpdateStatusBar();
+			debouncedRegisterProvider();
 		}
 	});
 }

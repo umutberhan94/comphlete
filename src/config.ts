@@ -9,3 +9,8 @@ export function isInlineCompletionEnabled(): boolean {
     const config = vscode.workspace.getConfiguration("comphlete");
     return config.get<boolean>("enableInlineCompletion", true);
 }
+
+export function getTemperature(): number {
+    const config = vscode.workspace.getConfiguration("comphlete");
+    return config.get<number>("temperature", 0.5);
+}

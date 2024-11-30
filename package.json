@@ -28,16 +28,23 @@
     "configuration": {
       "type": "object",
       "properties": {
+        "comphlete.enableInlineCompletion": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable inline completion functionality."
+        },
         "comphlete.debounceDelay": {
           "type": "number",
           "default": 300,
           "minimum": 0,
           "description": "The delay (in milliseconds) before triggering completion after typing stops."
         },
-        "comphlete.enableInlineCompletion": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable or disable inline completion functionality."
+        "comphlete.temperature": {
+          "type": "number",
+          "default": 0.5,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Controls the randomness of AI completions. Higher values result in more varied responses."
         }
       }
     }
