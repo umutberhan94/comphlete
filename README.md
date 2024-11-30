@@ -15,8 +15,12 @@ Inline Code Completions with AI. This extension leverages AI models that are exe
    ```bash
    ollama run qwen2.5-coder:1.5b
    ```
-After the download is complete, you should start seeing completions in VS Code.
+After the download is complete, you should start seeing completions as you code.
 
 ## Extension Settings
 
-Debounce Time: The delay (in milliseconds) before making a request after typing stops.
+Debounce Delay: The delay (in milliseconds) before triggering completion after typing stops.
+Enable Inline Completion: Enable or disable inline completion functionality.
+
+## Extension Commands
+Toggle Inline Completion: Toggle inline completion functionality.
