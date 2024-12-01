@@ -3,7 +3,7 @@ import { debounce } from "./debounce";
 import { createCompletionProvider } from "./completionProvider";
 import { isInlineCompletionEnabled } from "./config";
 
-let providerDisposable: vscode.Disposable | undefined;
+let providerDisposables: vscode.Disposable[] = [];
 
 export function activate(context: vscode.ExtensionContext) {
 	const serverUrl = "http://localhost:11434";
@@ -50,9 +50,12 @@ export function activate(context: vscode.ExtensionContext) {
 	function registerProvider() {
 		const shouldRegister = isInlineCompletionEnabled();
 
-		if (shouldRegister && !providerDisposable) {
-			const provider = createCompletionProvider(serverUrl);
+		if (shouldRegister) {
+			// Dispose of existing providers before registering new ones
+			providerDisposables.forEach(disposable => disposable.dispose());
+			providerDisposables = [];
 
+			const provider = createCompletionProvider(serverUrl);
 			const supportedLanguages = [
 				'ada', 'agda', 'alloy', 'antlr', 'applescript', 'assembly', 'augeas', 'awk',
 				'batchfile', 'bluespec', 'c', 'c#', 'c++', 'clojure', 'cmake', 'coffeescript',
@@ -68,15 +71,17 @@ export function activate(context: vscode.ExtensionContext) {
 				'yaml', 'zig'
 			];
 
-			supportedLanguages.forEach((language) => {
-				providerDisposable = vscode.languages.registerInlineCompletionItemProvider(
+			supportedLanguages.forEach(language => {
+				const disposable = vscode.languages.registerInlineCompletionItemProvider(
 					{ language },
 					provider
 				);
+				providerDisposables.push(disposable);
 			});
-		} else if (!shouldRegister && providerDisposable) {
-			providerDisposable.dispose();
-			providerDisposable = undefined;
+		} else {
+			// Dispose of all existing providers
+			providerDisposables.forEach(disposable => disposable.dispose());
+			providerDisposables = [];
 		}
 	}
 
@@ -94,7 +99,6 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
-	if (providerDisposable) {
-		providerDisposable.dispose();
-	}
+	providerDisposables.forEach(disposable => disposable.dispose());
+	providerDisposables = [];
 }
