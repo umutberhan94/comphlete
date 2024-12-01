@@ -20,7 +20,11 @@ After the download is complete, you should start seeing completions as you code.
 ## Extension Settings
 
 Debounce Delay: The delay (in milliseconds) before triggering completion after typing stops.
+
 Enable Inline Completion: Enable or disable inline completion functionality.
 
+Temperature: Controls the randomness of AI completions. Higher values result in more varied responses.
+
 ## Extension Commands
+
 Toggle Inline Completion: Toggle inline completion functionality.
