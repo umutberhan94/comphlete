@@ -1,9 +1,9 @@
-import axios, { CancelTokenSource } from "axios";
+import axios from "axios";
 import { getTemperature } from "./config";
 
 export class OllamaClient {
     private serverUrl: string;
-    private cancelTokenSource: CancelTokenSource | null = null;
+    private controller?: AbortController; // To manage cancellation of ongoing requests
 
     constructor(serverUrl: string) {
         this.serverUrl = serverUrl;
@@ -12,8 +12,17 @@ export class OllamaClient {
     async getCompletion(
         model: string,
         prompt: string,
+        timeoutMs: number = 5000
     ): Promise<any> {
-        const temperature = getTemperature();
+        // Cancel the previous request if it exists
+        if (this.controller) {
+            this.controller.abort();
+        }
+
+        this.controller = new AbortController();
+
+        const timeoutSignal = AbortSignal.timeout(timeoutMs);
+        const combinedSignal = AbortSignal.any([this.controller.signal, timeoutSignal]);
 
         const params = {
             model,
@@ -21,32 +30,21 @@ export class OllamaClient {
             stream: false,
             raw: true,
             options: {
-                temperature,
+                temperature: getTemperature(),
             },
         };
-
-        if (this.cancelTokenSource) {
-            this.cancelTokenSource.cancel("New request triggered");
-        }
-
-        this.cancelTokenSource = axios.CancelToken.source();
 
         try {
             const response = await axios.post(
                 `${this.serverUrl}/api/generate`,
                 params,
-                { cancelToken: this.cancelTokenSource.token }
+                { signal: combinedSignal }
             );
             return response.data;
-        } catch (error) {
-            if (axios.isCancel(error)) {
-                return null;
-            } else {
-                console.error("Error occurred:", error);
+        } catch (error: any) {
+            if (!axios.isCancel(error)) {
                 throw error;
             }
         }
-
-
     }
 }

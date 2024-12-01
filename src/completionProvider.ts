@@ -6,22 +6,31 @@ import { getDebounceDelay } from "./config";
 export function createCompletionProvider(serverUrl: string) {
     const ollamaClient = new OllamaClient(serverUrl);
 
+    // Initialize debounced function
     let debouncedGetCompletion = debounce(
         ollamaClient.getCompletion.bind(ollamaClient),
         getDebounceDelay()
     );
 
-    // Cache the last cursor position to prevent unnecessary calls
+    // Track the last cursor position and document version
     let lastCursorPosition: vscode.Position | null = null;
+    let lastDocumentVersion = -1;
 
     const provider: vscode.InlineCompletionItemProvider = {
         async provideInlineCompletionItems(document, position) {
-            // Check if the cursor has actually moved
-            if (lastCursorPosition && lastCursorPosition.isEqual(position)) {
+            // Prevent unnecessary calls if cursor hasn't moved
+            const currentVersion = document.version;
+            if (
+                lastCursorPosition &&
+                lastCursorPosition.isEqual(position) &&
+                lastDocumentVersion === currentVersion
+            ) {
                 return { items: [] };
             }
             lastCursorPosition = position;
+            lastDocumentVersion = currentVersion;
 
+            // Prepare the prefix and suffix code
             const prefixCode = document.getText(
                 new vscode.Range(new vscode.Position(0, 0), position)
             );
@@ -30,10 +39,10 @@ export function createCompletionProvider(serverUrl: string) {
             );
 
             const prompt = `<|fim_prefix|>${prefixCode}<|fim_suffix|>${suffixCode}<|fim_middle|>`;
-            const model = "qwen2.5-coder:1.5b";
+            const model = vscode.workspace.getConfiguration("comphlete").get("model", "qwen2.5-coder:1.5b");
 
             try {
-                const apiResponse = await debouncedGetCompletion(model, prompt);
+                const apiResponse = await debouncedGetCompletion(model, prompt, 5000);
 
                 if (!apiResponse?.response?.trim()) {
                     return { items: [] };
@@ -44,16 +53,14 @@ export function createCompletionProvider(serverUrl: string) {
 
                 return { items: [new vscode.InlineCompletionItem(completionText, range)] };
             } catch (error) {
-                if (error) {
-                    console.error("Error fetching completion:", error);
-                    vscode.window.showErrorMessage("Error communicating with Ollama");
-                }
+                console.error("Error fetching completion:", error);
+                vscode.window.showErrorMessage("Error communicating with the completion server. Check your configuration or connection.");
                 return { items: [] };
             }
-
         },
     };
 
+    // Update debounce delay on configuration changes
     vscode.workspace.onDidChangeConfiguration((event) => {
         if (event.affectsConfiguration("comphlete.debounceDelay")) {
             const newDelay = getDebounceDelay();
