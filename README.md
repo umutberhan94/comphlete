@@ -25,6 +25,8 @@ Enable Inline Completion: Enable or disable inline completion functionality.
 
 Temperature: Controls the randomness of AI completions. Higher values result in more varied responses.
 
+Model: The AI model to use for generating completions.
+
 ## Extension Commands
 
 Toggle Inline Completion: Toggle inline completion functionality.

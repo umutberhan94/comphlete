@@ -6,13 +6,11 @@ import { getDebounceDelay, getModel } from "./config";
 export function createCompletionProvider(serverUrl: string) {
     const ollamaClient = new OllamaClient(serverUrl);
 
-    // Initialize debounced function
     let debouncedGetCompletion = debounce(
         ollamaClient.getCompletion.bind(ollamaClient),
         getDebounceDelay()
     );
 
-    // Track the last cursor position and document version
     let lastCursorPosition: vscode.Position | null = null;
     let lastDocumentVersion = -1;
 
@@ -30,7 +28,6 @@ export function createCompletionProvider(serverUrl: string) {
             lastCursorPosition = position;
             lastDocumentVersion = currentVersion;
 
-            // Prepare the prefix and suffix code
             const prefixCode = document.getText(
                 new vscode.Range(new vscode.Position(0, 0), position)
             );
