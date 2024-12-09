@@ -34,6 +34,16 @@
           "default": true,
           "description": "Enable or disable inline completion functionality."
         },
+        "comphlete.model": {
+          "type": "string",
+          "default": "qwen2.5-coder:1.5b",
+          "enum": [
+            "qwen2.5-coder:1.5b",
+            "qwen2.5-coder:3b",
+            "qwen2.5-coder:7b"
+          ],
+          "description": "The AI model to use for generating completions."
+        },
         "comphlete.debounceDelay": {
           "type": "number",
           "default": 300,

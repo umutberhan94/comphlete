@@ -31,6 +31,7 @@ export class OllamaClient {
             raw: true,
             options: {
                 temperature: getTemperature(),
+                num_predict: 512
             },
         };
 

@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { OllamaClient } from "./ollamaClient";
 import { debounce } from "./debounce";
-import { getDebounceDelay } from "./config";
+import { getDebounceDelay, getModel } from "./config";
 
 export function createCompletionProvider(serverUrl: string) {
     const ollamaClient = new OllamaClient(serverUrl);
@@ -39,7 +39,7 @@ export function createCompletionProvider(serverUrl: string) {
             );
 
             const prompt = `<|fim_prefix|>${prefixCode}<|fim_suffix|>${suffixCode}<|fim_middle|>`;
-            const model = vscode.workspace.getConfiguration("comphlete").get("model", "qwen2.5-coder:1.5b");
+            const model = getModel();
 
             try {
                 const apiResponse = await debouncedGetCompletion(model, prompt, 5000);
@@ -54,7 +54,7 @@ export function createCompletionProvider(serverUrl: string) {
                 return { items: [new vscode.InlineCompletionItem(completionText, range)] };
             } catch (error) {
                 console.error("Error fetching completion:", error);
-                vscode.window.showErrorMessage("Error communicating with the completion server. Check your configuration or connection.");
+                vscode.window.showErrorMessage("Error communicating with Ollama. Check your configuration or connection.");
                 return { items: [] };
             }
         },
@@ -68,7 +68,6 @@ export function createCompletionProvider(serverUrl: string) {
                 ollamaClient.getCompletion.bind(ollamaClient),
                 newDelay
             );
-            console.log(`Debounce delay updated to: ${newDelay}`);
         }
     });
 
