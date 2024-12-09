@@ -13,3 +13,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Performance updates.
 - Registered Inline Completion for supported languages 
 
+## 1.3.0 (2024-12-02)
+
+- Track the document version 
+- Abort signal on axios request
+
+## 1.4.0 (2024-12-09)
+
+- Added model configuration (only qwen2.5-coder models with different sizes)
